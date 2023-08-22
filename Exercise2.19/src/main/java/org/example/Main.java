@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -15,12 +17,17 @@ public class Main {
         System.out.print("Введите третье число: ");
         int c = scanner.nextInt();
 
-        int[] values = {a, b, c}; // just to avoid duplicating code for a, b, c,
+        int[] values = {a, b, c};
+        HashMap<Integer, String> states = new HashMap<>();
+        states.put(0, "a");
+        states.put(1, "b");
+        states.put(2, "c");
         boolean hasValueDivisibleByFive = false;
 
-        for (int value : values) {
-            if (value % 5 == 0) {
-                System.out.println(value + " кратно 5");
+        for(int i = 0; i < values.length; i++) {
+            String delimiter = i == values.length - 1 ? "\n" : ", ";
+            if (values[i] % 5 == 0) {
+                System.out.print(states.get(i) + "=" + values[i] + delimiter);
                 hasValueDivisibleByFive = true;
             }
         }

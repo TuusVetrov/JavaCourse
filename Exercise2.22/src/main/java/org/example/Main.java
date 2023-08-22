@@ -2,9 +2,7 @@ package org.example;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -12,11 +10,10 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
         System.out.print("Введите дату (формат 31.12.2020): ");
         String inputDate = scanner.nextLine();
 
-        Date date = null;
+        Date date;
 
         try {
             date = dateFormat.parse(inputDate);
@@ -84,12 +81,14 @@ public class Main {
         calendar.setTime(startDate);
         int workDays = 0;
 
-        while (calendar.getTime().before(endDate) || calendar.getTime().equals(endDate)) {
+        int increment = startDate.before(endDate) ? 1 : -1;
+
+        while (calendar.getTime().before(endDate) || calendar.getTime().after(endDate)) {
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             if (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY) {
                 workDays++;
             }
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.add(Calendar.DAY_OF_YEAR, increment);
         }
 
         return workDays;
