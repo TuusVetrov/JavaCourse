@@ -4,6 +4,7 @@ import com.example.location.config.AppConfig;
 import com.example.location.model.GeoData;
 import com.example.location.model.Weather;
 import com.example.location.repository.GeoDataRepository;
+import com.example.location.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,36 +16,20 @@ import java.util.Optional;
 @RestController
 public class WeatherController {
     @Autowired
-    private AppConfig appConfig;
-    @Autowired
-    private GeoDataRepository repository;
-    @Autowired
-    private RestTemplate restTemplate;
+    private WeatherService weatherService;
+
     @GetMapping
     public Optional<GeoData> getWeather(@RequestParam String location) {
-        return repository.findByName(location);
+        return weatherService.getGeoDataByName(location);
     }
 
     @GetMapping("/weather")
-    public ResponseEntity redirectRequestWeather(@RequestParam String location) {
-        Optional<GeoData> geoDataOptional = repository.findByName(location);
-        if(geoDataOptional.isPresent()) {
-            GeoData geoData = geoDataOptional.get();
-            String url = String.format(
-                    appConfig.getBaseUrlPath() + "weather?lat=%s&lon=%s",
-                    geoData.getLat(),
-                    geoData.getLon()
-            );
-
-            Weather data = restTemplate.getForObject(url, Weather.class);
-            return new ResponseEntity(data, HttpStatus.OK);
-        } else {
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Weather> redirectRequestWeather(@RequestParam String location) {
+        return weatherService.getWeatherData(location);
     }
 
     @PostMapping
     public GeoData save(@RequestBody GeoData geodata) {
-        return repository.save(geodata);
+        return weatherService.saveGeoData(geodata);
     }
 }

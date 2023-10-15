@@ -1,0 +1,6 @@
+#FileLock
+#Sun Oct 15 20:52:54 MSK 2023
+hostName=localhost
+id=18b3478327f4ef1cea02af5d507d9fc28e53dd150ef
+method=file
+server=localhost\:50016
