@@ -5,6 +5,7 @@ import com.example.weather.model.WeatherData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,14 @@ public class WeatherService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Cacheable(value = "weatherCache", key = "#city", unless = "#result == null")
     public ResponseEntity<WeatherData.Main> getWeatherByCity(String city) {
         String apiUrl = appConfig.getBaseUrlPath() + "?q=" + city + "&appid=" + appConfig.getOpenWeatherMapApiKey();
 
         return getWeatherResponse(apiUrl);
     }
 
+    @Cacheable(value = "weatherCache", key = "#lat + '-' + #lon", unless = "#result == null")
     public ResponseEntity<WeatherData.Main> getWeatherByCoordinates(
             double lat,
             double lon
