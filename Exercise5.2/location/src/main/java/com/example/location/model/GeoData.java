@@ -28,4 +28,8 @@ public class GeoData {
     public double getLat() {
         return lat;
     }
+
+    public String getName() {
+        return name;
+    }
 }

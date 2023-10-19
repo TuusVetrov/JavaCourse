@@ -43,12 +43,14 @@ public class PersonService {
         return ResponseEntity.notFound().build();
     }
 
-    public Iterable<Person> findAllPeople() {
-        return repository.findAll();
+    public ResponseEntity<Iterable<Person>> findAllPeople() {
+        return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
 
-    public Optional<Person> findPersonById(int id) {
-        return repository.findById(id);
+    public ResponseEntity<Person> findPersonById(int id) {
+        return repository.findById(id).isPresent()
+                ? new ResponseEntity<>(repository.findById(id).get(), HttpStatus.OK)
+                : ResponseEntity.notFound().build();
     }
 
     public ResponseEntity<Person> savePerson(Person person) {

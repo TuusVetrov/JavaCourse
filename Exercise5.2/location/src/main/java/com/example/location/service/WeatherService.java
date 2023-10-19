@@ -4,6 +4,7 @@ import com.example.location.config.AppConfig;
 import com.example.location.model.GeoData;
 import com.example.location.model.Weather;
 import com.example.location.repository.GeoDataRepository;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,10 @@ public class WeatherService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Optional<GeoData> getGeoDataByName(String location) {
-        return repository.findByName(location);
+    public ResponseEntity<GeoData> getGeoDataByName(String location) {
+        Optional<GeoData> geoDataOptional = repository.findByName(location);
+        return geoDataOptional.map(geoData -> new ResponseEntity<>(geoData, HttpStatus.OK))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     public ResponseEntity<Weather> getWeatherData(String location) {
@@ -47,8 +50,9 @@ public class WeatherService {
             return ResponseEntity.notFound().build();
         }
     }
-
-    public GeoData saveGeoData(GeoData geodata) {
-        return repository.save(geodata);
+    public ResponseEntity<GeoData> saveGeoData(GeoData geodata) {
+        return repository.findByName(geodata.getName()).isPresent()
+                ? new ResponseEntity<>(repository.findByName(geodata.getName()).get(), HttpStatus.BAD_REQUEST)
+                : new ResponseEntity<>(repository.save(geodata), HttpStatus.CREATED);
     }
 }

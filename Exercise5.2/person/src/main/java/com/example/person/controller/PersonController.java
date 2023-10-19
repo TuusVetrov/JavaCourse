@@ -20,12 +20,12 @@ public class PersonController {
     }
 
     @GetMapping
-    public Iterable<Person> findAll() {
+    public ResponseEntity<Iterable<Person>> findAll() {
         return personService.findAllPeople();
     }
 
     @GetMapping("/{id}")
-    public Optional<Person> findById(@PathVariable int id) {
+    public ResponseEntity<Person> findById(@PathVariable int id) {
         return personService.findPersonById(id);
     }
 
