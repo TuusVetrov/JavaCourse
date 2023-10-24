@@ -1,11 +1,11 @@
-package com.example.demo;
+package com.example.demo.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.demo.model.Message;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Person {
@@ -16,9 +16,10 @@ public class Person {
     private String surname;
     private String lastname;
     private LocalDate birthday;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Message> messages;
 
-    public Person() {
-    }
+    public Person() {}
 
     public Person(String firstname, String surname, String lastname, LocalDate birthday) {
         this.firstname = firstname;
@@ -27,12 +28,21 @@ public class Person {
         this.birthday = birthday;
     }
 
-    public Person(int id, String firstname, String surname, String lastname, LocalDate birthday) {
+    public Person(int id, String firstname, String surname, String lastname, LocalDate birthday, List<Message> messages) {
         this.id = id;
         this.firstname = firstname;
         this.surname = surname;
         this.lastname = lastname;
         this.birthday = birthday;
+        this.messages = messages;
+    }
+
+    public void addMessage(Message message) {
+        messages.add(message);
+    }
+
+    public List<Message> getMessages() {
+        return messages;
     }
 
     public int getId() {

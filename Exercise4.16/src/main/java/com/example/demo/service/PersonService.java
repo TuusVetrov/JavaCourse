@@ -1,35 +1,33 @@
-package com.example.demo;
+package com.example.demo.service;
 
+import com.example.demo.repository.PersonRepository;
+import com.example.demo.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@RestController
-public class PersonController {
+@Service
+public class PersonService {
     @Autowired
-    private PersonRepository repository;
+    PersonRepository repository;
 
-    @GetMapping("/persons")
     public Iterable<Person> getPersons() {
         return repository.findAll();
     }
 
-    @GetMapping("/persons/{id}")
-    public Optional<Person> findPersonById(@PathVariable int id) {
+    public Optional<Person> findPersonById(int id) {
         return repository.findById(id);
     }
 
-    @PostMapping("/persons")
-    public Person addPerson(@RequestBody Person person) {
+    public Person addPerson(Person person) {
         repository.save(person);
         return person;
     }
 
-    @PutMapping("/persons/{id}")
-    public ResponseEntity<Person> updatePerson(@PathVariable int id, @RequestBody Person person) {
+    public ResponseEntity<Person> updatePerson(int id, Person person) {
         Optional<Person> existingPerson = repository.findById(id);
 
         if (existingPerson.isEmpty()) {
@@ -45,8 +43,7 @@ public class PersonController {
         return new ResponseEntity<>(this.repository.save(updatedPerson), HttpStatus.OK);
     }
 
-    @DeleteMapping("/persons/{id}")
-    public void deletePerson(@PathVariable int id) {
+    public void deletePerson(int id) {
         repository.deleteById(id);
     }
 }
